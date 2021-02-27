@@ -1,68 +1,55 @@
 ﻿using DataAccess.Abstract;
+using DocumentFormat.OpenXml.Drawing.Diagrams;
 using Entities.Concrete;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 
 namespace DataAccess.Concrete
 {
-    public class InMemoryProductDal : IProductDal
+    public class InMemoryCarDal : ICarDal
     {
-        List<Product> _products;
-        public InMemoryProductDal()
+        List<Car> _cars;
+        public InMemoryCarDal()
         {
-            _products = new List<Product>
+            _cars = new List<Car>
             {
-                new Product { ProductId = 1, BrandId = 2,ProductName="Car", ColorId = 3, Modelyear = 1935, DailyPrice = 15000, Description = "Son zamanlarda en çok satılan ürün" }
+                new Car{Id=1, CarName="Ford",DailyPrice=20000 },
+                new Car{Id=2,CarName="jeep",DailyPrice=30000},
+
             };
         }
 
-
-
-        public void Add(Product product)
+        public void Add(Car car)
         {
-            _products.Add(product);
+            _cars.Add(car);
         }
 
-        public void Add()
+        public void Delete(Car car)
+        {
+            Car carToDelete = _cars.SingleOrDefault(c => c.Id == car.Id);
+            _cars.Remove(carToDelete);
+        }
+
+        public Car Get(Expression<Func<Car, bool>> filter)
         {
             throw new NotImplementedException();
         }
 
-        public void Delete(Product product)
+        public List<Car> GetAll(Expression<Func<Car, bool>> filter = null)
         {
-            Product productToDelete = _products.SingleOrDefault(p => p.ProductId == product.ProductId);
-            _products.Remove(productToDelete);
-
+            return _cars;
         }
 
-        public void Delete()
+        public void Update(Car car)
         {
-            throw new NotImplementedException();
-        }
+            Car carToUpdate = _cars.SingleOrDefault(c => c.Id == car.Id);
+            carToUpdate.CarName = car.CarName;  
+            carToUpdate.ModelYear = car.ModelYear;
 
-        public List<Product> GetAll()
-        {
-            return _products;
-        }
 
-        public List<Product> GetAllByCategory(int categoryId)
-        {
-            return _products.Where(p => p.CategoryId == p.CategoryId).ToList();
-        }
-
-        public void Update(Product product)
-        {
-            Product productToUpdate = _products.SingleOrDefault(p => p.ProductId == product.ProductId);
-            productToUpdate.ProductId = product.ProductId;
-            productToUpdate.DailyPrice = product.DailyPrice;
-            productToUpdate.CategoryId = product.CategoryId;
-        }
-
-        public void Update()
-        {
-            throw new NotImplementedException();
         }
     }
 }
